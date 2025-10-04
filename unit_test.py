@@ -12,62 +12,67 @@ username_queries = ['kvqdmy1lzk8d', 'fm99lbj1b', 'ggc2u6', 'i917zey6xfn', '17f40
 
 username_queries_with_gt = [(q, True) if q in usernames else (q, False) for q in username_queries]
 
+g_show_details = False
+
 def unit_test_linear_search():
-    print("=== Unit test for linear search, enquiry {len(username_queries_with_gt)} times ===")
+    print(f"=== Unit test for linear search, enquiry {len(username_queries_with_gt)} times ===")
     error_count = 0
+    linear_checker = LinearChecker(usernames)
     for q, gt in username_queries_with_gt:
-        occupied = check_username_linear(q, usernames)
-        print(f'    {q} is occupied = {occupied}, expected {gt}')
+        occupied = linear_checker.contains(q)
+        if g_show_details:
+            print(f'    {q} is occupied = {occupied}, expected {gt}')
         if occupied != gt:
             error_count += 1
     print(f'Total error count: {error_count}, accuracy: {100 - error_count / len(username_queries_with_gt) * 100}%')
 
 def unit_test_binary_search():
-    print("=== Unit test for binary search, enquiry {len(username_queries_with_gt)} times ===")
+    print(f"=== Unit test for binary search, enquiry {len(username_queries_with_gt)} times ===")
     error_count = 0
-    sorted_usernames = sort_usernames(usernames)
+    binary_checker = BinaryChecker(usernames)
     for q, gt in username_queries_with_gt:
-        occupied = check_username_binary(q, sorted_usernames)
-        print(f'    {q} is occupied = {occupied}, expected {gt}')
+        occupied = binary_checker.contains(q)
+        if g_show_details:
+            print(f'    {q} is occupied = {occupied}, expected {gt}')
         if occupied != gt:
             error_count += 1
     print(f'Total error count: {error_count}, accuracy: {100 - error_count / len(username_queries_with_gt) * 100}%')
 
 def unit_test_hash():
-    print("=== Unit test for hash, enquiry {len(username_queries_with_gt)} times ===")
-    username_hash_set = create_username_hash_table(usernames)
+    print(f"=== Unit test for hash, enquiry {len(username_queries_with_gt)} times ===")
+    hash_checker = HashChecker(usernames)
     error_count = 0
     for q, gt in username_queries_with_gt:
-        occupied = check_username_hash(q, username_hash_set)
-        print(f'    {q} is occupied = {occupied}, expected {gt}')
+        occupied = hash_checker.contains(q)
+        if g_show_details:
+            print(f'    {q} is occupied = {occupied}, expected {gt}')
         if occupied != gt:
             error_count += 1
     print(f'Total error count: {error_count}, accuracy: {100 - error_count / len(username_queries_with_gt) * 100}%')
 
 
 def unit_test_bloom_filter():
-    print("=== Unit test for bloom filter, enquiry {len(username_queries_with_gt)} times ===")
-    bf = BloomFilter(n=1000, p=0.01)
-    for w in usernames:
-        bf.add(w)
+    print(f"=== Unit test for bloom filter, enquiry {len(username_queries_with_gt)} times ===")
+    bf = BloomFilter(n=1000, p=0.01, usernames=usernames)
     error_count = 0
     for (q, gt) in username_queries_with_gt:
         occupied = bf.contains(q)
-        print(f'    {q} is occupied = {occupied}, expected {gt}')
+        if g_show_details:
+            print(f'    {q} is occupied = {occupied}, expected {gt}')
         if occupied != gt:
             error_count += 1
     print(f'Total error count: {error_count}, accuracy: {100 - error_count / len(username_queries_with_gt) * 100}%')
 
 def unit_test_cuckoo_filter():
-    print("=== Unit test for cuckoo filter, enquiry {len(username_queries_with_gt)} times ===")
-    cf = CuckooFilter(capacity=100, bucket_size=4, fingerprint_size=8)
-    for w in usernames:
-        cf.add(w)
+    print(f"=== Unit test for cuckoo filter, enquiry {len(username_queries_with_gt)} times ===")
+    cuckoo_params = cal_cuckoo_params(usernames, 0.01)
+    cf = CuckooFilter(**cuckoo_params)
 
     error_count = 0
     for (q, gt) in username_queries_with_gt:
         occupied = cf.contains(q)
-        print(f'    {q} is occupied in cuckoo filter {occupied}, expected {gt}')
+        if g_show_details:
+            print(f'    {q} is occupied in cuckoo filter {occupied}, expected {gt}')
         if occupied != gt:
             error_count += 1
     print(f'Total error count: {error_count}, accuracy: {100 - error_count / len(username_queries_with_gt) * 100}%')
@@ -76,12 +81,14 @@ def unit_test_cuckoo_filter():
     print(f'randomly selecting 10 elements from usernames and deleting them from cuckoo filter ===')
     random_elements = random.sample(usernames, 10)
     for q in random_elements:
-        print(f'deleting {q} from cuckoo filter')
+        if g_show_details:
+            print(f'deleting {q} from cuckoo filter')
         cf.delete(q)
     error_count = 0 
     for q in random_elements:
         occupied = cf.contains(q)
-        print(f'    {q} is occupied = {occupied}, expected "False"')
+        if g_show_details:
+            print(f'    {q} is occupied = {occupied}, expected "False"')
         if occupied != False:
             error_count += 1
     print(f'Total error count: {error_count}, accuracy: {100 - error_count / len(random_elements) * 100}%')

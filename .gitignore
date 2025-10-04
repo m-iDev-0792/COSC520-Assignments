@@ -1,4 +1,7 @@
 dataset
+dataset_false
+results_10K.json
+results_10percent.json
 # Byte-compiled / optimized / compiled files
 __pycache__/
 *.pyc

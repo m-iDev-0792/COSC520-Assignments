@@ -1,9 +1,36 @@
 import hashlib
 import random
+from tqdm import tqdm
+import math
+
+
+def cal_cuckoo_params(usernames, p, bucket_size=4, load_factor=0.95):
+    """
+    n: number of expected elements
+    p: target false positive rate
+    bucket_size: slots per bucket (default 4)
+    load_factor: expected load factor (default 0.95)
+    """
+    n = len(usernames)
+    # fingerprint size f (bits)
+    f = math.ceil(math.log2(bucket_size / p))
+    # number of buckets
+    num_buckets = math.ceil(n / (bucket_size * load_factor))
+    # capacity
+    capacity = num_buckets * bucket_size
+    return {
+        "usernames": usernames,
+        "dataset_size": n,
+        "capacity": capacity,
+        "bucket_size": bucket_size,
+        "fingerprint_size": f,
+        "max_kicks": 500
+    }
 
 class CuckooFilter:
-    def __init__(self, capacity=1000, bucket_size=4, fingerprint_size=8, max_kicks=500):
+    def __init__(self, dataset_size, capacity=1000, bucket_size=4, fingerprint_size=8, max_kicks=500, usernames=None):
         """
+        usernames: list of usernames
         capacity: expected number of elements
         bucket_size: number of slots per bucket
         fingerprint_size: fingerprint size in bits
@@ -14,6 +41,14 @@ class CuckooFilter:
         self.max_kicks = max_kicks
         self.num_buckets = capacity // bucket_size
         self.buckets = [[] for _ in range(self.num_buckets)]
+        self.dataset_size = dataset_size
+        self.capacity = capacity
+        if usernames is not None:
+            for username in usernames:
+                if isinstance(username, tuple):
+                    self.add(username[0])
+                else:
+                    self.add(username)
 
     def _fingerprint(self, item):
         h = hashlib.md5(item.encode()).hexdigest()
@@ -64,3 +99,15 @@ class CuckooFilter:
                 self.buckets[i].remove(fp)
                 return True
         return False
+
+    def check(self, items):
+        default_pair = ("", False)
+        ret = [default_pair] * len(items)
+        with tqdm(total=len(items), desc="Checking usernames") as pbar:
+            for index, item in enumerate(items):
+                if isinstance(item, tuple):
+                    ret[index] = (item[0], self.contains(item[0]))
+                else:
+                    ret[index] = (item, self.contains(item))
+                pbar.update(1)
+        return ret

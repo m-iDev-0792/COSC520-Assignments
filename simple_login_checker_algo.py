@@ -1,6 +1,6 @@
 import time
 from typing import List, Set
-
+from tqdm import tqdm
 
 # ============================================================================
 # HELPER FUNCTIONS
@@ -92,3 +92,93 @@ def check_username_hash(username: str, username_set: Set[str]) -> bool:
         True if username exists, False otherwise
     """
     return username in username_set
+
+
+
+from typing import List, Set
+
+class LinearChecker:
+    """Username checker using linear search (O(n))."""
+
+    def __init__(self, usernames: List[str]):
+        self.usernames: List[str] = usernames
+        self.dataset_size = len(usernames)
+        print(f"LinearChecker initialized with {len(self.usernames):,} usernames")
+
+    def contains(self, username: str) -> bool:
+        for user in self.usernames:
+            if user == username:
+                return True
+        return False
+        
+    def check(self, items):
+        default_pair = ("", False)
+        ret = [default_pair] * len(items)
+        with tqdm(total=len(items), desc="Checking usernames") as pbar:
+            for index, item in enumerate(items):
+                if isinstance(item, tuple):
+                    ret[index] = (item[0], self.contains(item[0]))
+                else:
+                        ret[index] = (item, self.contains(item))
+                pbar.update(1)
+        return ret
+
+
+class BinaryChecker:
+    """Username checker using binary search (O(log n))."""
+
+    def __init__(self, usernames: List[str]):
+        print(f"Sorting {len(usernames):,} usernames for BinaryChecker...")
+        self.sorted_usernames: List[str] = sorted(usernames)
+        self.dataset_size = len(usernames)
+        print("BinaryChecker initialized")
+
+    def contains(self, username: str) -> bool:
+        left, right = 0, len(self.sorted_usernames) - 1
+        while left <= right:
+            mid = (left + right) // 2
+            mid_username = self.sorted_usernames[mid]
+
+            if mid_username == username:
+                return True
+            elif mid_username < username:
+                left = mid + 1
+            else:
+                right = mid - 1
+        return False
+
+    def check(self, items):
+        default_pair = ("", False)
+        ret = [default_pair] * len(items)
+        with tqdm(total=len(items), desc="Checking usernames") as pbar:
+            for index, item in enumerate(items):
+                if isinstance(item, tuple):
+                    ret[index] = (item[0], self.contains(item[0]))
+                else:
+                    ret[index] = (item, self.contains(item))
+                pbar.update(1)
+        return ret
+
+class HashChecker:
+    """Username checker using hash table lookup (O(1) avg)."""
+
+    def __init__(self, usernames: List[str]):
+        print(f"Creating hash set for {len(usernames):,} usernames...")
+        self.username_set: Set[str] = set(usernames)
+        self.dataset_size = len(usernames)
+        print("HashChecker initialized")
+
+    def contains(self, username: str) -> bool:
+        return username in self.username_set
+
+    def check(self, items):
+        default_pair = ("", False)
+        ret = [default_pair] * len(items)
+        with tqdm(total=len(items), desc="Checking usernames") as pbar:
+            for index, item in enumerate(items):
+                if isinstance(item, tuple):
+                    ret[index] = (item[0], self.contains(item[0]))
+                else:
+                    ret[index] = (item, self.contains(item))
+                pbar.update(1)
+        return ret
