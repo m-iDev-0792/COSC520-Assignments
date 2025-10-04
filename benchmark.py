@@ -39,8 +39,8 @@ def benchmark_general_framework(query_list, login_checker, enable_memory_monitor
     # check time and memory usage
     query_size = len(query_list)
     real_query_size = query_size
-    if query_size*login_checker.dataset_size > 5000*10000 and "Linear" in login_checker.__class__.__name__ :
-        real_query_size = int(5000*10000/login_checker.dataset_size)
+    if query_size*login_checker.dataset_size > 10000*10000 and "Linear" in login_checker.__class__.__name__ :
+        real_query_size = int(10000*10000/login_checker.dataset_size)
         query_list = random.sample(query_list, real_query_size) # resample the query list to 5000 when it's LinearChecker
         print(f"Resampled query {query_size} ->{real_query_size} usernames")
     
@@ -259,9 +259,7 @@ def plot_experiment_results(
 if __name__ == "__main__":
     test_datasize_list = [
                             10000, 40000, 80000,
-                            100000, 400000, 800000,
-                            1000000, 4000000, 8000000,
-                            10000000
+                            100000, 400000, 800000
                             ]
     # test_datasize_list = [10000, 50000]
     results_10K = benchmark_10K(test_datasize_list)
