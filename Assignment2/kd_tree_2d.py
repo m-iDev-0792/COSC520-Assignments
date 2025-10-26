@@ -262,6 +262,9 @@ def benchmark_kdtree():
     print("\n" + "="*80)
     print("PERFORMANCE ANALYSIS: Exact vs Approximate Median")
     print("="*80)
+
+    if not os.path.exists("./output"):
+        os.makedirs("./output")
     
     for N in N_values:
         points = sample_n_elements(source_point_set, N)
