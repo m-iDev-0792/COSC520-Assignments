@@ -245,7 +245,7 @@ class LinearSearch2D:
 
 
 def benchmark_kdtree():
-    N_values = [10000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000, 20000000, 50000000, 10000000]
+    N_values = [10000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000]
     sample_size = 100  # Sample size for approximate median
     results = []
 
@@ -265,7 +265,7 @@ def benchmark_kdtree():
     
     for N in N_values:
         points = sample_n_elements(source_point_set, N)
-        queries = sample_n_elements(query_point_set, round(query_num_ration * N))
+        queries = sample_n_elements(query_point_set, 5000) #round(query_num_ration * N)
         
         print(f"\n--- N = {N} ({len(queries)} queries) ---")
         
