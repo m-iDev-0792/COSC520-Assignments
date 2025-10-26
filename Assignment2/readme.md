@@ -46,7 +46,7 @@ python visualize_kd_tree_2d.py
 
 ## Benchmark
 
-To test the performance of the implemented KD tree algorithm under different data scales, please run kd_tree_2d.py, which compares build time, query time, and memory usage under different data numbers and optimization settings (dimension selection methods and searching strategy).
+To test the performance of the implemented KD tree algorithm under different data scales, please run kd_tree_2d.py, which compares build time, query time, and memory usage under different data numbers and optimization settings (dimension selection methods and tree construction strategy).
 
 ```
 python kd_tree_2d.py
