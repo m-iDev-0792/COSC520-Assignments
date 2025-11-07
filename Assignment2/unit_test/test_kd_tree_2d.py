@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from kd_tree_2d import KDTree2D
+from spatial_trees.kd_tree_2d import KDTree2D
 
 def brute_force_nn(points, target):
     d2 = np.sum((points - target) ** 2, axis=1)

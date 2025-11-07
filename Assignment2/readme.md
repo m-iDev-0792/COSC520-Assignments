@@ -10,7 +10,7 @@ pip install -r requirements.txt
 
 A dataset generation Python script is provided to generate an arbitrary number of datasets.
 
-For convenience, you can simply double-click one of the batch scripts to generate a dataset according to your platform:
+For convenience, you can goto the direcotry `./scripts`, and simply double-click one of the batch scripts to generate a dataset according to your platform:
 
 ```
 Windows ===> dataset_gen.bat
@@ -23,6 +23,8 @@ If you can't execute one of these scripts, please make sure these scripts are ex
 For example, you can do this on Linux/MacOS:
 
 ```
+cd Assignment2
+cd scripts
 chmod +x dataset_gen*
 ```
 
@@ -31,7 +33,11 @@ chmod +x dataset_gen*
 In this repo, I also provided a unit test script to verify the correctness of the KD tree.
 
 ```
-pytest -v test_kdtree2d.py
+cd Assignment2
+pytest -v unit_test/test_kd_tree_2d.py
+pytest -v unit_test/test_implicit_kd_tree_2d.py
+pytest -v unit_test/test_quadtree_2d.py
+
 ```
 
 Running the unit test requires pytest to be installed. So make sure you have all packages in requirements.txt installed.
