@@ -41,6 +41,7 @@ def benchmark_all_spatial_trees():
     
     # Configuration
     N_values = [10000, 50000, 100000, 200000, 500000, 1000000]
+    N_values = [10000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000]
     query_count = 1000  # Fixed number of queries per test
     results = []
 
