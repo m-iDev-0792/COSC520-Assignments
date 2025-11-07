@@ -44,7 +44,7 @@ Running the unit test requires pytest to be installed. So make sure you have all
 
 ## Visualization
 
-I provided a Python script to visualize the step-by-step searching process of the KD tree. You can check it by running visualize_kd_tree_2d.py:
+I provided a Python script to visualize the step-by-step searching process of the KD tree. You can check it by running `visualize_kd_tree_2d.py`:
 
 ```
 python visualize_kd_tree_2d.py
@@ -52,8 +52,9 @@ python visualize_kd_tree_2d.py
 
 ## Benchmark
 
-To test the performance of the implemented KD tree algorithm under different data scales, please run kd_tree_2d.py, which compares build time, query time, and memory usage under different data numbers and optimization settings (dimension selection methods and tree construction strategy).
+To test the performance of the implemented KD tree algorithm under different data scales, please run `scripts/benchmark.py`, which compares build time, query time, and memory usage under different data numbers and optimization settings (dimension selection methods and tree construction strategy).
 
 ```
-python kd_tree_2d.py
+cd Assignment2
+PYTHONPATH=src python scripts/benchmark.py
 ```
